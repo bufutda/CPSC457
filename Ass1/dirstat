@@ -11,10 +11,8 @@ elif [ -d $1 ]; then # if the argument is a directory
             ((FILES++)) # increment file counter
         elif [ -d "$1/$file" ]; then # if it is a directory
             ((DIRECTORIES++)) # increment directory counter
-        else
-            printf "\x1b[31mError\x1b[0m: $1/$file is not a file or directory\n"
         fi
-    done < <(ls -1 $1) # pipe the output of all files at $1 into the loop
+    done < <(ls -a1 $1) # pipe the output of all files at $1 into the loop
     echo "  $DIRECTORIES directories and $FILES files"
 else
     printf "\x1b[31mFatal\x1b[0m: $1 is not a directory\n"
