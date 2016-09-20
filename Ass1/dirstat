@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+if [ "$1" = "" ]; then # if an argument was given
+    echo "  dirstat: count direct children of a directory"
+    printf "  Usage:\tdirstat <path>\n"
+    exit 1
+elif [ -d $1 ]; then # if the argument is a directory
+    DIRECTORIES=0
+    FILES=0
+    while read -r file; do # iterate over lines of the ls output, with each line as "file"
+        if [ -f "$1/$file" ]; then # if it is a file
+            ((FILES++)) # increment file counter
+        elif [ -d "$1/$file" ]; then # if it is a directory
+            ((DIRECTORIES++)) # increment directory counter
+        else
+            printf "\x1b[31mError\x1b[0m: $1/$file is not a file or directory\n"
+        fi
+    done < <(ls -1 $1) # pipe the output of all files at $1 into the loop
+    echo "  $DIRECTORIES directories and $FILES files"
+else
+    printf "\x1b[31mFatal\x1b[0m: $1 is not a directory\n"
+    exit 1
+fi

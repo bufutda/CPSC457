@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+declare -a DIRS # array named DIRS
+MAXCOUNTER=0
+SUC=0
+while read -r DIR; do # loop over the output of the find, with each line as DIR
+    DIRS[MAXCOUNTER]=$DIR # add line of output to the array
+    ((MAXCOUNTER++)) # iterate the counter
+done < <(find . -type d) # pipe the names of every directory (recursive) in the working directory into the loop
+COUNTER=0
+while [ $COUNTER -lt $MAXCOUNTER ]; do # while there are still items in the array
+    INNERCOUNTER=$((COUNTER+1)) # set the innercounter to the outercounter + 1
+    while [ $INNERCOUNTER -lt $MAXCOUNTER ]; do # while there are still items in the array
+        diff -r "${DIRS[$COUNTER]}" "${DIRS[$INNERCOUNTER]}" > /dev/null 2>&1 # test whether the two paths have identicle contents
+        if [ $? -eq 0 ]; then # diff will exit with 0 if the two dirs are the same
+            echo "  ${DIRS[$COUNTER]} is the same as ${DIRS[$INNERCOUNTER]}"
+            SUC=1
+        fi
+        ((INNERCOUNTER++)) # iterate the counter
+    done
+    ((COUNTER++)) # iterate the counter
+done
+if [ $SUC -eq 0 ]; then # no results found
+    echo "  No identicle subdirectories found"
+    exit 1
+fi

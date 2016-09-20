@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+if [ "$1" = "" ]; then # if no argument is given
+    printf "  fod: test if a path is a directory or a file or other\n"
+    printf "  Usage:\tfod <path>\n"
+    exit 1
+elif [ -f $1 ]; then # if the first argument is a file
+    echo "  $1 is a file"
+elif [ -d $1 ]; then # if the first argument is a directory
+    echo "  $1 is a directory"
+else
+    du $1 > /dev/null 2>&1 # disk usage of object at path
+    if [ $? -eq 0 ]; then # if du had an error (path exists)
+        printf "\x1b[31mFatal\x1b[0m: $1 is neither a file nor a directory\n"
+    else
+        printf "\x1b[31mFatal\x1b[0m: $1 does not exist\n"
+    fi
+    exit 1
+fi

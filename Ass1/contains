@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+if [ "$2" = "" ]; then # if two arguments were not given
+    echo "  contains: test if a directory contains another directory"
+    printf "  Usage:\tcontains <dir> <dir>"
+    exit 1
+else
+    SUC=0
+    if [ -d $1 ] || [ -d $2 ]; then # if one of the two paths are directories
+        if [ -d $1 ]; then # if the first path is a directory
+            if [ -d "$1/$2" ]; then # if the second path is a child of the first path
+                echo "  $1 contains $2"
+                SUC=1
+            fi
+        fi
+        if [ -d $2 ]; then # if the second path is a directory
+            if [ -d "$2/$1" ]; then # if the first path is a child of the second path
+                echo "  $2 contains $1"
+                SUC=1
+            fi
+        fi
+        if [ $SUC -eq 0 ]; then # if neither of the above statements evaluated
+            echo "  There is no direct relationship between $1 and $2"
+            exit 1
+        fi
+    else
+        echo "  Neither $1 nor $2 are directories"
+        exit 1
+    fi
+fi
