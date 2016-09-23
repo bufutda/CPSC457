@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+if [ "$1" = "" ]; then # if an argument was given
+    echo "  dirstat: count direct children of a directory"
+    printf "  Usage:\tdirstat <path>\n"
+    exit 1
+elif [ -d $1 ]; then # if the argument is a directory
+    DIRECTORIES=0
+    FILES=0
+    searchdir () { # searchdir <path> -- search the dir
+        while read -r file; do # loop over all files in the first directory, with each file as "file"
+            if [ -f "$1/$file" ]; then # if it is a file
+                ((FILES++)) # increment the file counter
+            elif [ -d "$1/$file" ]; then # if it is a directory
+                ((DIRECTORIES++)) # increment the directory counter
+                searchdir "$1/$file" # search the newly found dir
+            fi
+        done < <(ls -1 $1 2> /dev/null) # pipe all filenames in the directory into the loop
+    }
+    searchdir "$1"
+    echo "  $DIRECTORIES directories and $FILES files"
+else
+    echo "Fatal: $1 is not a directory"
+    exit 1
+fi

@@ -10,20 +10,27 @@ else
             FILESA=0
             DIRECTORIESB=0
             FILESB=0
-            while read -r file; do # loop over all files in the first directory, with each file as "file"
-                if [ -f "$1/$file" ]; then # if it is a file
-                    ((FILESA++)) # increment the file counter
-                elif [ -d "$1/$file" ]; then # if it is a directory
-                    ((DIRECTORIESA++)) # increment the directory counter
-                fi
-            done < <(ls -1 $1 2> /dev/null) # pipe all filenames in the directory into the loop
-            while read -r file; do # loop over all files in the first directory, with each file as "file"
-                if [ -f "$2/$file" ]; then # if it is a file
-                    ((FILESB++)) # increment the file counter
-                elif [ -d "$2/$file" ]; then # if it is a directory
-                    ((DIRECTORIESB++)) # increment the directory counter
-                fi
-            done < <(ls -1 $2 2> /dev/null) # pipe all filenames in the directory into the loop
+            searchdir () { # searchdir <0|1> <path> -- 0 for A, 1 for B, search the dir
+                while read -r file; do # loop over all files in the first directory, with each file as "file"
+                    if [ -f "$2/$file" ]; then # if it is a file
+                        if [ $1 -eq 0 ]; then
+                            ((FILESA++)) # increment the file counter
+                        else
+                            ((FILESB++)) # increment the file counter
+                        fi
+                    elif [ -d "$2/$file" ]; then # if it is a directory
+                        if [ $1 -eq "0" ]; then
+                            ((DIRECTORIESA++)) # increment the directory counter
+                            searchdir 0 "$2/$file"
+                        else
+                            ((DIRECTORIESB++)) # increment the directory counter
+                            searchdir 1 "$2/$file"
+                        fi
+                    fi
+                done < <(ls -1 $2 2> /dev/null) # pipe all filenames in the directory into the loop
+            }
+            searchdir 1 "$1" # search the first dir
+            searchdir 0 "$2" # search the second dir
             if [ $FILESA -lt $FILESB ]; then # if there are less files in the first dir than the second dir
                 echo "  $1 has more files than $2"
             elif [ $FILESA -eq $FILESB ]; then # if there are the same amount of files in the first dir than the second dir
@@ -39,11 +46,11 @@ else
                 echo "  $2 has more directories than $1"
             fi
         else
-            echo "Fatal: $2 does not exist or it is not a directory"
-            exit 1
+            printf "Fatal: $2 does not exist or it is not a directory"
+            exit 1;
         fi
     else
-        echo "Fatal: $1 does not exist or it is not a directory"
-        exit 1
+        printf "Fatal: $1 does not exist or it is not a directory"
+        exit 1;
     fi
 fi

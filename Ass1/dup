@@ -5,7 +5,7 @@ SUC=0
 while read -r DIR; do # loop over the output of the find, with each line as DIR
     DIRS[MAXCOUNTER]=$DIR # add line of output to the array
     ((MAXCOUNTER++)) # iterate the counter
-done < <(find . -type d) # pipe the names of every directory (recursive) in the working directory into the loop
+done < <(find . -type d 2> /dev/null) # pipe the names of every directory (recursive) in the working directory into the loop
 COUNTER=0
 while [ $COUNTER -lt $MAXCOUNTER ]; do # while there are still items in the array
     INNERCOUNTER=$((COUNTER+1)) # set the innercounter to the outercounter + 1

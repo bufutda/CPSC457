@@ -1,4 +1,4 @@
-!/usr/bin/env bash
+#!/usr/bin/env bash
 if [ "$2" = "" ]; then # if two arguments were not given
     echo "  contains: test if a directory contains another directory"
     printf "  Usage:\tcontains <dir> <dir>"
@@ -27,15 +27,3 @@ else
         exit 1
     fi
 fi
-
-
-# if [ "$2" = "" ]; then # if two arguments were not given
-#     echo "  contains: test if a directory contains another directory"
-#     printf "  Usage:\tcontains <dir> <dir>"
-#     exit 1
-# else
-#     find "$1" -name "$2" -type d -depth 1 2> /dev/null
-#     RET=$?
-#     find "$2" -name "$1" -type d -depth 1 2> /dev/null
-#     exit $((RET+$?))
-# fi

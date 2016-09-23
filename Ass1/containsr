@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+if [ "$2" = "" ]; then # if two arguments were not given
+    echo "  contains: test if a directory contains another directory"
+    printf "  Usage:\tcontains <dir> <dir>"
+    exit 1
+else
+    SUC=1 # keep track of find success
+    while read -r line; do # iterate through lines of the find command
+        echo "  $1 contains $2 ($line)"
+        SUC=0
+    done < <(find "$1" -name "$2" -type d 2> /dev/null) # find a folder inside the first dir, direct errors to /dev/null, pipe result to loop
+    while read -r line; do
+        echo "  $2 contains $1 ($line)"
+        SUC=0
+    done < <(find "$2" -name "$1" -type d 2> /dev/null) # find a folder inside the second dir, direct errors to /dev/null, pipe result to loop
+    if [ $SUC -eq 1 ]; then # neither command found anything
+        echo "  No relationship found between $1 and $2"
+    fi
+    exit $SUC
+fi
