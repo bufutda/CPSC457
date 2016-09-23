@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if [ "$2" = "" ]; then # if two arguments were not given
-    echo "  contains: test if a directory contains another directory"
+    echo "  containsr: test if a directory contains another directory (recursive)"
     printf "  Usage:\tcontains <dir> <dir>"
     exit 1
 else

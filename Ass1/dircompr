@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if [ "$2" = "" ]; then # if 2 arguments were not given
-    echo "  dircomp: compare direct children of a two directories"
+    echo "  dircompr: compare direct children of a two directories (recursive)"
     printf "  Usage:\tdircomp <path> <path>\n"
     exit 1
 else
