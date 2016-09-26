@@ -4,7 +4,7 @@ if [ "$1" = "" ]; then # if no argument is given
     printf "  Usage:\tfod <path>\n"
     exit 1
 fi
-if [ -f "./$1" ] || [ -d "./$1" ]; then
+if [ -f "./$1" ] || [ -d "./$1" ]; then # the first argument is a file or a dir
     if [ -f "./$1" ]; then # if the first argument is a file
         echo "  $1 is a file"
     fi
@@ -15,7 +15,7 @@ else
     du $1 > /dev/null 2>&1 # disk usage of object at path
     if [ $? -eq 0 ]; then # if du had an error (path exists)
         echo "Fatal: $1 is neither a file nor a directory"
-    else
+    else # if the path does not exist
         echo "Fatal: $1 does not exist in the current directory"
     fi
     exit 1

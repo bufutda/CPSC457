@@ -2,10 +2,10 @@
 if [ "$1" = "" ]; then # if an argument was given
     echo "  dirstatr: count children of a directory (recursive)"
     printf "  Usage:\tdirstat <path>\n"
-    exit 1
+    exit 1 # exiting with a value of one to show that there was an error
 elif [ -d $1 ]; then # if the argument is a directory
-    DIRECTORIES=0
-    FILES=0
+    DIRECTORIES=0 # initializing a variable to track the number of directories found
+    FILES=0 # initializing a variable to track the number of files found
     searchdir () { # searchdir <path> -- search the dir
         while read -r file; do # loop over all files in the first directory, with each file as "file"
             if [ -f "$1/$file" ]; then # if it is a file
@@ -17,8 +17,8 @@ elif [ -d $1 ]; then # if the argument is a directory
         done < <(ls -1 $1 2> /dev/null) # pipe all filenames in the directory into the loop
     }
     searchdir "$1"
-    echo "  $DIRECTORIES directories and $FILES files"
-else
+    echo "  $DIRECTORIES directories and $FILES files" # displaying the total directories/files found
+else # if the argument is not a directory
     echo "Fatal: $1 is not a directory"
     exit 1
 fi

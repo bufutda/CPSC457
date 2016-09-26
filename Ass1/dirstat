@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-if [ "$1" = "" ]; then # if an argument was given
+if [ "$1" = "" ]; then # if an argument was not given
     echo "  dirstat: count direct children of a directory"
     printf "  Usage:\tdirstat <path>\n"
     exit 1
@@ -14,7 +14,7 @@ elif [ -d $1 ]; then # if the argument is a directory
         fi
     done < <(ls -a1 $1 2> /dev/null) # pipe the output of all files at $1 into the loop
     echo "  $DIRECTORIES directories and $FILES files"
-else
+else # if the argument is not a directory
     echo "Fatal: $1 is not a directory"
     exit 1
 fi
