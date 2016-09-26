@@ -3,7 +3,7 @@ if [ "$2" = "" ]; then # if two arguments were not given
     echo "  contains: test if a directory contains another directory"
     printf "  Usage:\tcontains <dir> <dir>"
     exit 1
-else
+else # if two arguments were not given
     SUC=0
     if [ -d $1 ] || [ -d $2 ]; then # if one of the two paths are directories
         if [ -d $1 ]; then # if the first path is a directory
