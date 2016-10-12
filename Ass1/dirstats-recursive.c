@@ -26,7 +26,7 @@ int main (int argc, char* argv[]) {
     int rep = search(argv[1], pathBuffer, &files, &dirs); // start recursive search at the given path
     if (rep != 0) { // search was unsuccsessful
         return rep;
-    } else {
+    } else { // search was successful
         printf("  %d directories and %d files\n", dirs, files);
         return 0;
     }
@@ -37,8 +37,8 @@ int search (char* base, char* pathBuffer, int* files, int* dirs) {
     struct dirent *dirst; // a structure to place dir info
     struct stat file; // a structure to place file info
     int rep = 0;
-    if (stat(base, &file) < 0) {
-        printf("%s\x1b[31m Error\x1b[0m: %s (%d)\n", pathBuffer, errno == 2 ? "EACCES" : "", errno);
+    if (stat(base, &file) < 0) { //If there was an error returned from stat
+        printf("%s Error: %s (%d)\n", pathBuffer, errno == 2 ? "EACCES" : "", errno);
         return 2;
     } else {
         if (S_ISDIR(file.st_mode)) {

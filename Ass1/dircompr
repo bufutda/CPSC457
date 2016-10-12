@@ -3,13 +3,13 @@ if [ "$2" = "" ]; then # if 2 arguments were not given
     echo "  dircompr: compare direct children of a two directories (recursive)"
     printf "  Usage:\tdircomp <path> <path>\n"
     exit 1
-else
+else # if 2 arguments were given
     if [ -d $1 ]; then # if the first argument is a directory
         if [ -d $2 ]; then # if the second argument is a directory
-            DIRECTORIESA=0
-            FILESA=0
-            DIRECTORIESB=0
-            FILESB=0
+            DIRECTORIESA=0 # initializing a variable for the number of dirs in the first argument
+            FILESA=0 # initializing a variable for the number of files in the first argument
+            DIRECTORIESB=0 # initializing a variable for the number of dirs in the second argument
+            FILESB=0 # initializing a variable for the number of files in the second argument
             searchdir () { # searchdir <0|1> <path> -- 0 for A, 1 for B, search the dir
                 while read -r file; do # loop over all files in the first directory, with each file as "file"
                     if [ -f "$2/$file" ]; then # if it is a file
@@ -22,7 +22,7 @@ else
                         if [ $1 -eq "0" ]; then
                             ((DIRECTORIESA++)) # increment the directory counter
                             searchdir 0 "$2/$file"
-                        else
+                        else # if it is neither a file nor a directory
                             ((DIRECTORIESB++)) # increment the directory counter
                             searchdir 1 "$2/$file"
                         fi
@@ -42,14 +42,14 @@ else
                 echo "  $1 has more directories than $2"
             elif [ $DIRECTORIESA -eq $DIRECTORIESB ]; then # if there are the same amount of dirs in the first dir than the second dir
                 echo "  $1 has the same number of directories as $2"
-            else
+            else # if there are more dirs in the second dir
                 echo "  $2 has more directories than $1"
             fi
-        else
+        else # if the second argument is not a dir
             printf "Fatal: $2 does not exist or it is not a directory"
             exit 1;
         fi
-    else
+    else # if the first argument is not a dir
         printf "Fatal: $1 does not exist or it is not a directory"
         exit 1;
     fi

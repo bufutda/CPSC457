@@ -6,10 +6,10 @@ if [ "$2" = "" ]; then # if 2 arguments were not given
 else
     if [ -d $1 ]; then # if the first argument is a directory
         if [ -d $2 ]; then # if the second argument is a directory
-            DIRECTORIESA=0
-            FILESA=0
-            DIRECTORIESB=0
-            FILESB=0
+            DIRECTORIESA=0 # initiate a variable for the number of dirs in the first dir
+            FILESA=0 # initiate a variable for the number of files in the first dir
+            DIRECTORIESB=0 # initiate a variable for the number of dirs in the second dir
+            FILESB=0 # initiate a variable for the number of files in the second dir
             while read -r file; do # loop over all files in the first directory, with each file as "file"
                 if [ -f "$1/$file" ]; then # if it is a file
                     ((FILESA++)) # increment the file counter
@@ -38,11 +38,11 @@ else
             else
                 echo "  $2 has more directories than $1"
             fi
-        else
+        else # if the second argument is not a directory
             echo "Fatal: $2 does not exist or it is not a directory"
             exit 1
         fi
-    else
+    else # if the first argument is not a directory
         echo "Fatal: $1 does not exist or it is not a directory"
         exit 1
     fi

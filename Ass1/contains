@@ -22,7 +22,7 @@ else # if two arguments were not given
             echo "  There is no direct relationship between $1 and $2"
             exit 1
         fi
-    else
+    else # if neither of the two paths are directories
         echo "  Neither $1 nor $2 are directories"
         exit 1
     fi

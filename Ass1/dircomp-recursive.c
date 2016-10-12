@@ -27,20 +27,20 @@ int main (int argc, char* argv[]) {
     rep += search(argv[2], pathBufferB, &filesB, &dirsB); // start recursive search at the second directory
     if (rep != 0) { // at least one search was unsuccsessful
         return rep;
-    } else {
+    } else { // all searches were successful
         // output logic
-        if (filesA < filesB) {
+        if (filesA < filesB) { // if the first dir has less files than the second
             printf("  %s has less files than %s\n", argv[1], argv[2]);
-        } else if (filesA == filesB) {
+        } else if (filesA == filesB) { // if the first dir has the same number of files as the second
             printf("  %s has the same number of files as %s\n", argv[1], argv[2]);
-        } else {
+        } else { // if the first dir has more files than the second
             printf("  %s has more files than %s\n", argv[1], argv[2]);
         }
-        if (dirsA < dirsB) {
+        if (dirsA < dirsB) {// if the first dir has less dirs than the second
             printf("  %s has less directories than %s\n", argv[1], argv[2]);
-        } else if (dirsA == dirsB) {
+        } else if (dirsA == dirsB) { // if the first dir has the same number of dirs as the second
             printf("  %s has the same number of directories as %s\n", argv[1], argv[2]);
-        } else {
+        } else { // if the first dir has more dirs than the second
             printf("  %s has more directories than %s\n", argv[1], argv[2]);
         }
         return 0;
@@ -53,12 +53,12 @@ int search (char* base, char* pathBuffer, int* files, int* dirs) {
     struct stat file; // a structure to place file info
     int rep = 0;
     if (stat(base, &file) < 0) { // information about base path
-        printf("%s\x1b[31m Error\x1b[0m: %s (%d)\n", base, errno == 2 ? "EACCES" : "", errno); // stat failed
+        printf("%s Error: %s (%d)\n", base, errno == 2 ? "EACCES" : "", errno); // stat failed
         return 2;
     } else {
         if (S_ISDIR(file.st_mode)) { // if the base dir is a directory
             directory = opendir (base); // open the directory
-            if (directory != NULL) {
+            if (directory != NULL) { // if the directory opens correctly
                 while ((dirst = readdir (directory))) { // while there are still items in the dir
                     if (strcmp(dirst->d_name, ".") == 0 || strcmp(dirst->d_name, "..") == 0) { // avoid looping
                         continue;
@@ -67,7 +67,7 @@ int search (char* base, char* pathBuffer, int* files, int* dirs) {
                     strcat(pathBuffer, "/");
                     strcat(pathBuffer, dirst->d_name);
                     if (stat(pathBuffer, &file) < 0) { // gather info about the item
-                        printf("%s\x1b[31m Error\x1b[0m: %s (%d)\n", pathBuffer, errno == 2 ? "EACCES" : "", errno);
+                        printf("%s Error: %s (%d)\n", pathBuffer, errno == 2 ? "EACCES" : "", errno);
                         rep = 2;
                     } else {
                         if (S_ISREG(file.st_mode)) { // item is a file
@@ -83,11 +83,11 @@ int search (char* base, char* pathBuffer, int* files, int* dirs) {
                 }
                 closedir(directory); // close the directory
                 return rep;
-            } else {
+            } else { // if the directory does not open correctly
                 return 1;
             }
-        } else {
-            printf("%s\x1b[31m Error\x1b[0m: not a directory\n", base);
+        } else { // if the base dir is not a directory
+            printf("%s Error: not a directory\n", base);
             return 3;
         }
     }

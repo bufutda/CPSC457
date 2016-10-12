@@ -53,7 +53,7 @@ int execFind (char* cmd, char* first, char* second) {
                 return 1;
             }
             return 0;
-        } else {
+        } else { // if the base path is not a directory
             return 0;
         }
     }

@@ -5,7 +5,7 @@ if [ "$1" = "" ]; then # if no argument is given
     exit 1
 fi
 echo "$1" | grep "^\/*\(\.\|\.\.\)\/*\(\/\+\.\|\/\+\.\.\)*\/*$" # test if the given path will evaluate to .. or .
-if [ $? -eq 0 ]; then
+if [ $? -eq 0 ]; then # if they supplied a path of "." or ".."
     echo "Fatal: You cannot give a path that consists only of .. or ."
     exit 1
 fi
@@ -23,11 +23,11 @@ fod () {
     fi
 }
 fod "./$BASE"
-if [ $SUC -eq 0 ]; then
+if [ $SUC -eq 0 ]; then # if the path was not found
     du $1 > /dev/null 2>&1 # disk usage of object at path
     if [ $? -eq 0 ]; then # if du had an error (path exists)
         printf "Fatal: $1 is neither a file nor a directory"
-    else
+    else # if the path does not exist
         printf "Fatal: $1 does not exist in the current directory or any of its subdirectories"
     fi
     exit 1

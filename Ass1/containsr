@@ -3,7 +3,7 @@ if [ "$2" = "" ]; then # if two arguments were not given
     echo "  containsr: test if a directory contains another directory (recursive)"
     printf "  Usage:\tcontains <dir> <dir>"
     exit 1
-else
+else # if two arguments were given
     SUC=1 # keep track of find success
     while read -r line; do # iterate through lines of the find command
         echo "  $1 contains $2 ($line)"
