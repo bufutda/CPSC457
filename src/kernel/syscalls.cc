@@ -1,5 +1,5 @@
 /******************************************************************************
-    Copyright © 2012-2015 Martin Karsten
+    Copyright ï¿½ 2012-2015 Martin Karsten
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 #include "world/Access.h"
 #include "machine/Processor.h"
 #include "machine/Machine.h"
-
 
 #include "syscalls.h"
 #include "pthread.h"
@@ -218,6 +217,29 @@ extern "C" void _init_sig_handler(vaddr sighandler) {
   CurrProcess().setSignalHandler(sighandler);
 }
 
+extern "C" int sched_setaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask) {
+  if (pid != 0) {
+    errno = EPERM;
+    return -1;
+  }
+  if (((*mask) >> Machine::getProcessorCount()) != 0) {
+    errno = EINVAL;
+    return -1;
+  }
+  LocalProcessor::getCurrThread()->setAffinityMask(*mask);
+//LocalProcessor::getScheduler();
+  return 0;
+}
+
+extern "C" int sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask) {
+  if (pid != 0) {
+    errno = EPERM;
+    return -1;
+  }
+  *mask = LocalProcessor::getCurrThread()->getAffinityMask();
+  return 0;
+}
+
 /******* dummy functions *******/
 
 extern "C" int fstat(int fildes, struct stat *buf) {
@@ -245,29 +267,31 @@ void* __dso_handle = nullptr;
 
 typedef ssize_t (*syscall_t)(mword a1, mword a2, mword a3, mword a4, mword a5);
 static const syscall_t syscalls[] = {
-  syscall_t(_exit),
-  syscall_t(open),
-  syscall_t(close),
-  syscall_t(read),
-  syscall_t(write),
-  syscall_t(lseek),
-  syscall_t(get_core_count),
-  syscall_t(getpid),
-  syscall_t(getcid),
-  syscall_t(usleep),
-  syscall_t(_mmap),
-  syscall_t(_munmap),
-  syscall_t(_pthread_create),
-  syscall_t(pthread_exit),
-  syscall_t(pthread_join),
-  syscall_t(pthread_kill),
-  syscall_t(pthread_self),
-  syscall_t(semCreate),
-  syscall_t(semDestroy),
-  syscall_t(semP),
-  syscall_t(semV),
-  syscall_t(privilege),
-  syscall_t(_init_sig_handler)
+  syscall_t(_exit), // 0
+  syscall_t(open), // 1
+  syscall_t(close), // 2
+  syscall_t(read), // 3
+  syscall_t(write), // 4
+  syscall_t(lseek), // 5
+  syscall_t(get_core_count), // 6
+  syscall_t(getpid), // 7
+  syscall_t(getcid), // 8
+  syscall_t(usleep), // 9
+  syscall_t(_mmap), // 10
+  syscall_t(_munmap), // 11
+  syscall_t(_pthread_create), // 12
+  syscall_t(pthread_exit), // 13
+  syscall_t(pthread_join), // 14
+  syscall_t(pthread_kill), // 15
+  syscall_t(pthread_self), // 16
+  syscall_t(semCreate), // 17
+  syscall_t(semDestroy), // 18
+  syscall_t(semP), // 19
+  syscall_t(semV), // 20
+  syscall_t(privilege), // 21
+  syscall_t(_init_sig_handler), // 22
+  syscall_t(sched_setaffinity), // 23
+  syscall_t(sched_getaffinity) // 24
 };
 
 static_assert(sizeof(syscalls)/sizeof(syscall_t) == SyscallNum::max, "syscall list error");

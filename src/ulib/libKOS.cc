@@ -133,3 +133,11 @@ extern "C" int kill(pid_t pid, int sig) {
   *__errno() = EINVAL;
   return -1;
 }
+
+extern "C" int sched_setaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask) {
+  return syscallStub(SyscallNum::sched_setaffinity, pid, cpusetsize, mword(mask)); // 23
+}
+
+extern "C" int sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask) {
+  return syscallStub(SyscallNum::sched_getaffinity, pid, cpusetsize, mword(mask)); // 24
+}

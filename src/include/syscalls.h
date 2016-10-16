@@ -21,32 +21,38 @@ extern "C" long get_core_count();
 
 extern "C" int privilege(void*, mword, mword, mword, mword);
 
+extern "C" int sched_setaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask);
+
+extern "C" int sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask);
+
 namespace SyscallNum {
 
 enum : mword {
   _exit = 0,
-  open,
-  close,
-  read,
-  write,
-  lseek,
-  get_core_count,
-  getpid,
-  getcid,
-  usleep,
-  _mmap,
-  _munmap,
-  _pthread_create,
-  pthread_exit,
-  pthread_join,
-  pthread_kill,
-  pthread_self,
-  semCreate,
-  semDestroy,
-  semP,
-  semV,
-  privilege,
-  _init_sig_handler,
+  open, // 1
+  close, // 2
+  read, // 3
+  write, // 4
+  lseek, // 5
+  get_core_count, // 6
+  getpid, // 7
+  getcid, // 8
+  usleep, // 9
+  _mmap, // 10
+  _munmap, // 11
+  _pthread_create, // 12
+  pthread_exit, // 13
+  pthread_join, // 14
+  pthread_kill, // 15
+  pthread_self, // 16
+  semCreate, // 17
+  semDestroy, // 18
+  semP, // 19
+  semV, // 20
+  privilege, // 21
+  _init_sig_handler, // 22
+  sched_setaffinity, // 23
+  sched_getaffinity, // 24
   max
 };
 

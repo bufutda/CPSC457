@@ -51,6 +51,8 @@ public:
   static void registerIrqSync(mword irq, mword vec);
   static void registerIrqAsync(mword irq, funcvoid1_t handler, ptr_t ctx);
   static void deregisterIrqAsync(mword irq, funcvoid1_t handler);
+
+  static Scheduler* getProcessorScheduler(mword processor);
 };
 
 void Breakpoint2(vaddr ia = 0) __ninline;
