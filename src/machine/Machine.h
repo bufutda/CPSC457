@@ -43,6 +43,7 @@ public:
   static void bootMain();
 
   static mword getProcessorCount() { return processorCount; }
+  static Scheduler* schedulerTable;
   static void setAffinity(Thread& t, mword idx);
   static void sendIPI(mword idx, uint8_t vec);
   static void sendWakeIPI(Scheduler* scheduler);

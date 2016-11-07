@@ -35,6 +35,7 @@ class Thread : public EmbeddedList<Thread>::Link {
 
   mword priority;           // scheduling priority
   mword vRuntime;			// virtual runtime, needed to sort the tree
+  bool newThread;           // if the thread has been scheduled ever
   bool affinity;            // stick with scheduler
   Scheduler* nextScheduler; // resume on same core (for now)
 
@@ -50,7 +51,7 @@ protected:
 
   Thread(vaddr sb, size_t ss) :
     stackPointer(vaddr(this)), stackBottom(sb), stackSize(ss),
-    priority(defPriority), affinity(false), nextScheduler(nullptr),
+    priority(defPriority), vRuntime(0), newThread(true), affinity(false), nextScheduler(nullptr),
     state(Running), unblockInfo(nullptr) {}
 
   // called directly when creating idle thread(s)

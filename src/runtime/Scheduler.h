@@ -33,7 +33,7 @@ class Scheduler {
   
   volatile mword readyCount; 
   Tree<ThreadNode> *readyTree;
-  
+  Tree<ThreadNode> *blockedTree;  
   volatile mword preemption;
   volatile mword resumption;
 
@@ -46,7 +46,20 @@ class Scheduler {
 
   Scheduler(const Scheduler&) = delete;                  // no copy
   const Scheduler& operator=(const Scheduler&) = delete; // no assignment
+  
+  // default configurations
+  unsigned long secondTicksDefault = 316028671250;//1.8 * 10e9;
+  unsigned int schedMinGranularityDefault = 4;
+  unsigned int epochLengthDefault = 20;
 
+  // configurations
+  unsigned int schedMinGranularityTicks;
+  unsigned int defaultEpochLengthTicks;
+  unsigned int EpochLengthTicks;
+  bool configured;
+  mword minvRuntime;
+  mword timeOfLastInterruptTicks;
+  mword totalPriorityOfAllTasks;
 public:
   Scheduler();
   
@@ -57,6 +70,8 @@ public:
   void suspend(BasicLock& lk);
   void suspend(BasicLock& lk1, BasicLock& lk2);
   void terminate() __noreturn;
+  void calibrate(unsigned int num, unsigned long ticks, unsigned int epoch, unsigned int granularity);
+  void updateEpoch();
 };
 
 #endif /* _Scheduler_h_ */

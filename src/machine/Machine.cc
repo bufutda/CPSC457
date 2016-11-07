@@ -89,7 +89,7 @@ static InterruptDescriptor idt[maxIDT]                __aligned(pagesize<1>());
 // CPU information
 mword Machine::processorCount = 0;
 static Processor* processorTable = nullptr;
-static Scheduler* schedulerTable = nullptr;
+Scheduler* Machine::schedulerTable = nullptr;
 static mword bspIndex = ~mword(0);
 static mword bspApicID = ~mword(0);
 
@@ -325,6 +325,10 @@ void Machine::initBSP2() {
   rtc.init();
   // init PIT timer; used for waiting
   pit.init();
+  
+  // would calibrate schedulers here, but the kernel does not like to sleep here.
+  // do it in kosmain instead.
+
   // init keyboard; must init RTC first (HW req)?
   keyboard.init();
 
