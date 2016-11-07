@@ -10,4 +10,5 @@
 /src/user/exec
 *.dep
 *.state
-
+cscope.files
+tags
