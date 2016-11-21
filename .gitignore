@@ -10,4 +10,4 @@
 /src/user/exec
 *.dep
 *.state
-
+*.class
